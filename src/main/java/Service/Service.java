@@ -15,13 +15,13 @@ public class Service {
     protected IRepository<Rezervare> repoRez;
     protected IRepository<Loc> repoLoc;
 
-    public Service(IRepository<Spectator> repo1,  IRepository<Loc> repo2, IRepository<Rezervare> repo3) {
+    public Service(IRepository<Spectator> repo1, IRepository<Loc> repo2, IRepository<Rezervare> repo3) {
         repoSpec = repo1;
         repoLoc = repo2;
         repoRez = repo3;
     }
 
-    private int getRezervareId() {
+    private int makeRezervareId() {
         try {
             return repoRez.findAll().stream()
                     .mapToInt(Rezervare::getId)
@@ -39,7 +39,7 @@ public class Service {
         return repoLoc.findAll();
     }
 
-    public boolean efectuareRezervare(String nume, String prenume, String email, String numarTelefon, int[] lista) throws Exception {
+    public boolean efectuareRezervare(String nume, String prenume, String email, String parola, String numarTelefon, int[] lista) throws Exception {
         Optional<Spectator> existing = repoSpec.findAll().stream()
                 .filter(s -> s.getEmail().equalsIgnoreCase(email))
                 .findFirst();
@@ -49,15 +49,15 @@ public class Service {
             id_s = existing.get().getId();
         } else {
             id_s = getSpectatorId();
-            addSpectator(id_s, nume, prenume, email, numarTelefon);
+            addSpectator(id_s, nume, prenume, email, parola, numarTelefon);
         }
         for (int i : lista) {
-            efectuareRezervarePeLoc(id_s, nume, prenume, email, numarTelefon, i);
+            efectuareRezervarePeLoc(id_s, i);
         }
         return true;
     }
 
-    public void efectuareRezervarePeLoc(int id_s, String nume, String prenume, String email, String numarTelefon, int id_l) throws Exception {
+    public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
         LocalDate azi = LocalDate.now();
         Date data = Date.from(azi.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
@@ -66,25 +66,28 @@ public class Service {
             throw new Exception();
         }
 
-        Rezervare r = new Rezervare(getRezervareId(), "Spectacol azi", data, id_s, id_l);
+        Rezervare r = new Rezervare(makeRezervareId(), "Spectacol azi", data, id_s, id_l);
         repoRez.add(r);
         repoLoc.getEntityById(id_l).setStare(true);
         //ocup locul
         //return true;
     }
 
-    private void resetareStareLocuriLaOra6(){}
+    private void resetareStareLocuriLaOra6() {
+    }
 
-    private void setareSpectacol(){}
+    private void setareSpectacol() {
+    }
 
-    private void efectuareResetareZilnica(){}
+    private void efectuareResetareZilnica() {
+    }
 
 
 //------CRUD-----------------
 
 
-    public void addSpectator(int id_s, String nume, String prenume, String email, String numarTelefon) throws Exception {
-        Spectator s = new Spectator(id_s, nume, prenume, email, numarTelefon);
+    public void addSpectator(int id_s, String nume, String prenume, String email, String parola, String numarTelefon) throws Exception {
+        Spectator s = new Spectator(id_s, nume, prenume, email, parola, numarTelefon);
         //todo:validare
         repoSpec.add(s);
     }
@@ -99,8 +102,8 @@ public class Service {
         return repoSpec.findAll();
     }
 
-    public void updateSpectator(int id_s, String nume, String prenume, String email, String numarTelefon) throws Exception {
-        repoSpec.update(repoSpec.getEntityById(id_s), new Spectator(id_s, nume, prenume, email, numarTelefon));
+    public void updateSpectator(int id_s, String nume, String prenume, String email, String parola, String numarTelefon) throws Exception {
+        repoSpec.update(repoSpec.getEntityById(id_s), new Spectator(id_s, nume, prenume, email, parola ,numarTelefon));
     }
 
 }

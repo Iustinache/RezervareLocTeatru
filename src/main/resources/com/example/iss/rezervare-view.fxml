@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="327.0" prefWidth="313.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.iss.RezervareView">
+<AnchorPane prefHeight="327.0" prefWidth="313.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.iss.RezervareController">
    <children>
       <GridPane prefHeight="327.0" prefWidth="304.0">
         <columnConstraints>
@@ -40,11 +40,12 @@
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints maxHeight="54.599981689453124" minHeight="10.0" prefHeight="45.60000419616699" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="54.599981689453124" minHeight="9.000011825561522" prefHeight="45.60000419616699" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="109.79998817443848" minHeight="10.0" prefHeight="45.59997558593751" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="99.80000152587891" minHeight="10.0" prefHeight="43.20002441406251" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="128.8" minHeight="10.0" prefHeight="44.800018310546875" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="119.99999084472654" minHeight="10.0" prefHeight="115.19998168945312" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="54.599981689453124" minHeight="9.000011825561522" prefHeight="33.8000244140625" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="109.79998817443848" minHeight="10.0" prefHeight="32.59998779296875" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="99.80000152587891" minHeight="10.0" prefHeight="33.59998168945313" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="99.80000152587891" minHeight="10.0" prefHeight="27.40003662109376" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="128.8" minHeight="10.0" prefHeight="29.99998779296874" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="119.99999084472654" minHeight="10.0" prefHeight="63.60001220703123" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Numele:" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -62,20 +63,38 @@
                         <Font size="15.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Numarul de telefon:" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Parola:" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                       <font>
+                           <Font size="15.0" />
+                       </font>
+                   </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Numarul de telefon:" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Text>
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5">
+<!--                  <TextField fx:id="textFieldNume" GridPane.columnIndex="2" GridPane.rowIndex="1" />-->
+<!--                  <TextField fx:id="textFieldPrenume" GridPane.columnIndex="2" GridPane.rowIndex="2" />-->
+<!--                  <TextField fx:id="textFieldEmail" GridPane.columnIndex="2" GridPane.rowIndex="3" />-->
+<!--                   <TextField fx:id="textFieldParola" GridPane.columnIndex="2" GridPane.rowIndex="4" />-->
+<!--                  <TextField fx:id="textFieldTelefon" GridPane.columnIndex="2" GridPane.rowIndex="5" />-->
+
+                   <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                   <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                   <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                   <TextField GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                   <TextField GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                  <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="2" GridPane.rowIndex="6">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onConfirmaButtonClick" prefHeight="37.0" prefWidth="123.0" text="Confirmare" />
                      </children>
                   </HBox>
+                  <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onAnulareButtonClick" prefHeight="37.0" prefWidth="123.0" text="Anulare" />
+                     </children>
+                  </HBox>
+
                </children>
             </GridPane>
          </children>

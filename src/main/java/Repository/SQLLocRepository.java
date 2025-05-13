@@ -17,7 +17,7 @@ public class SQLLocRepository extends RepoMemory<Loc> {
     public SQLLocRepository() {
         openConnection();
         createTable();
-        //initSpectatoriTable();
+        //initLocuriTable();
         loadData();
     }
 
@@ -27,26 +27,28 @@ public class SQLLocRepository extends RepoMemory<Loc> {
 
 
 
-    private void initSpectatoriTable() {
-        List<Loc> spectatoriList = new ArrayList<>();
+    private void initLocuriTable() {
+        List<Loc> locuriList = new ArrayList<>();
         for(int i=1 ; i<=8 ; i++)
             for(int j=1 ; j<=18 ; j++) {
-                spectatoriList.add(new Loc((i - 1) * 18 + j, i, "parter", (i - 1) * 18 + j, 20, false));
+                locuriList.add(new Loc((i - 1) * 18 + j, i, "parter", (i - 1) * 18 + j, 20, false));
             }
         for(int i=1 ; i<=2 ; i++)
             for(int j=1 ; j<=14 ; j++) {
-                spectatoriList.add(new Loc(144 + (i - 1) * 14 + j, i, "loja A", (i - 1) * 14 + j, 25, false));
-                spectatoriList.add(new Loc(144 + 28 + 48 + (i - 1) * 14 + j, i, "loja C", (i - 1) * 14 + j, 25, false));
+                locuriList.add(new Loc(144 + (i - 1) * 14 + j, i, "loja A", (i - 1) * 14 + j, 25, false));
             }
-
         for(int i=1 ; i<=2 ; i++)
             for(int j=1 ; j<=24 ; j++) {
-                spectatoriList.add(new Loc(144 + 28 + (i - 1) * 24 + j, i, "loja B", (i - 1) * 24 + j, 25, false));
+                locuriList.add(new Loc(144 + 28 + (i - 1) * 24 + j, i, "loja B", (i - 1) * 24 + j, 25, false));
+            }
+        for(int i=1 ; i<=2 ; i++)
+            for(int j=1 ; j<=14 ; j++) {
+                locuriList.add(new Loc(144 + 28 + 48 + (i - 1) * 14 + j, i, "loja C", (i - 1) * 14 + j, 25, false));
             }
 
 
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO locuri VALUES (?,?,?,?,?,?);")) {
-            for (Loc l : spectatoriList) {
+            for (Loc l : locuriList) {
                 statement.setInt(1, l.getId());
                 statement.setInt(2, l.getRand());
                 statement.setString(3, l.getLoja());

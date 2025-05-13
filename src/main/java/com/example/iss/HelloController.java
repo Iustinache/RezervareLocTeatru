@@ -459,6 +459,62 @@ public class HelloController {
     private ToggleButton l219;
     @FXML
     private ToggleButton l220;
+    @FXML
+    private ToggleButton l221;
+    @FXML
+    private ToggleButton l222;
+    @FXML
+    private ToggleButton l223;
+    @FXML
+    private ToggleButton l224;
+    @FXML
+    private ToggleButton l225;
+    @FXML
+    private ToggleButton l226;
+    @FXML
+    private ToggleButton l227;
+    @FXML
+    private ToggleButton l228;
+    @FXML
+    private ToggleButton l229;
+    @FXML
+    private ToggleButton l230;
+    @FXML
+    private ToggleButton l231;
+    @FXML
+    private ToggleButton l232;
+    @FXML
+    private ToggleButton l233;
+    @FXML
+    private ToggleButton l234;
+    @FXML
+    private ToggleButton l235;
+    @FXML
+    private ToggleButton l236;
+    @FXML
+    private ToggleButton l237;
+    @FXML
+    private ToggleButton l238;
+    @FXML
+    private ToggleButton l239;
+    @FXML
+    private ToggleButton l240;
+    @FXML
+    private ToggleButton l241;
+    @FXML
+    private ToggleButton l242;
+    @FXML
+    private ToggleButton l243;
+    @FXML
+    private ToggleButton l244;
+    @FXML
+    private ToggleButton l245;
+    @FXML
+    private ToggleButton l246;
+    @FXML
+    private ToggleButton l247;
+    @FXML
+    private ToggleButton l248;
 
     @FXML
     private Button butonRezervare;
@@ -469,12 +525,11 @@ public class HelloController {
 
     @FXML
     public void initialize() throws NoSuchFieldException, IllegalAccessException {
-        for (int i = 1; i <= 220; i++) {
+        for (int i = 1; i <= 248; i++) {
             ToggleButton buton = (ToggleButton) getClass().getDeclaredField("l" + i).get(this);
             locuriButoane.add(buton);
         }
     }
-
 
     public void setService(Service service){
         this.service = service;
@@ -502,17 +557,16 @@ public class HelloController {
             btn.setUserData(loc.getId()); // păstrăm ID-ul locului în buton
 
             if (loc.getStare()) {
-                btn.setStyle("-fx-background-color: red;");
+                btn.setStyle("-fx-background-color: red; -fx-border-color: grey;");
                 btn.setDisable(true);
             }
-
-//            btn.setOnAction(e -> {
-//                if (btn.isSelected()) {
-//                    btn.setStyle("-fx-background-color: green;");
-//                } else {
-//                    btn.setStyle("");
-//                }
-//            });
+            btn.setOnAction(e -> {
+                if (btn.isSelected()) {
+                    btn.setStyle("-fx-background-color: green; -fx-border-color: grey;");
+                } else {
+                    btn.setStyle("-fx-background-color: lightgreen; -fx-border-color: grey;");
+                }
+            });
         }
     }
 

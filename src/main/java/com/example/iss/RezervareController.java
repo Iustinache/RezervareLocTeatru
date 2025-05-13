@@ -19,6 +19,7 @@ public class RezervareController {
     private List<Integer> locuriSelectate;
     private List<ToggleButton> locuriButoane;
     private HelloController parentController; // referința la controllerul principal
+
     @FXML
     private TextField textFieldNume;
     @FXML
@@ -26,9 +27,13 @@ public class RezervareController {
     @FXML
     private TextField textFieldEmail;
     @FXML
-    private TextField textFieldTelefon;
+    private TextField textFieldParola;
     @FXML
-    private Button confirmaButton;
+    private TextField textFieldTelefon;
+//    @FXML
+//    private Button confirmaButton;
+//    @FXML
+//    private Button anulareButton;
 
     // se setează de HelloController
     public void setService(Service service) {
@@ -51,8 +56,13 @@ public class RezervareController {
     }
 
     @FXML
-    private void onConfirmaButtonClick(){
+    private void onConfirmaButtonClick() {
         handleConfirmare();
+    }
+
+    @FXML
+    private void onAnulareButtonClick() {
+        return;
     }
 
     // Apelată când apăsăm pe butonul Confirmă din rezervare-view.fxml
@@ -63,6 +73,7 @@ public class RezervareController {
             String nume = textFieldNume.getText();
             String prenume = textFieldPrenume.getText();
             String email = textFieldEmail.getText();
+            String parola = textFieldParola.getText();
             String telefon = textFieldTelefon.getText();
 
             // Validare minimală
@@ -74,12 +85,8 @@ public class RezervareController {
 
             // Efectuăm rezervarea prin service
             int[] locuriArray = locuriSelectate.stream().mapToInt(i -> i).toArray();
-            service.efectuareRezervare(nume, prenume, email, telefon, locuriArray);
+            service.efectuareRezervare(nume, prenume, email, parola, telefon, locuriArray);
 
-//            textFieldNume.clear();
-//            textFieldPrenume.clear();
-//            textFieldEmail.clear();
-//            textFieldTelefon.clear();
 
             // După rezervare, facem butoanele roșii și dezactivate
             for (ToggleButton btn : locuriButoane) {

@@ -32,11 +32,11 @@ public class SQLRezervareRepository extends RepoMemory<Rezervare> {
 
     private void initRezervariTable() {
         List<Rezervare> rezervariList = new ArrayList<>();
-        Spectator s1 = new Spectator(1,"Nume1","Prenume1","test1@gmail.com","+4070000000000");
-        Spectator s2 = new Spectator(2,"Nume2","Prenume2","test2@gmail.com","+4070000000001");
-        Spectator s3 = new Spectator(3,"Nume3","Prenume3","test3@gmail.com","+4070000000002");
-        Spectator s4 = new Spectator(4,"Nume4","Prenume4","test4@gmail.com","+4070000000003");
-        Spectator s5 = new Spectator(5,"Nume5","Prenume5","test5@gmail.com","+4070000000004");
+        Spectator s1 = new Spectator(1,"Nume1","Prenume1","test1@gmail.com","parola1" ,"+4070000000000");
+        Spectator s2 = new Spectator(2,"Nume2","Prenume2","test2@gmail.com","parola2","+4070000000001");
+        Spectator s3 = new Spectator(3,"Nume3","Prenume3","test3@gmail.com","parola3","+4070000000002");
+        Spectator s4 = new Spectator(4,"Nume4","Prenume4","test4@gmail.com","parola4","+4070000000003");
+        Spectator s5 = new Spectator(5,"Nume5","Prenume5","test5@gmail.com","parola5","+4070000000004");
 
         Loc loc1 = new Loc(1, 1, "A", 1, 50.0, false); // liber
         Loc loc2 = new Loc(2, 1, "A", 2, 50.0, true);  // ocupat
