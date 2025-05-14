@@ -1,12 +1,22 @@
+
+
 package com.example.iss;
 
+import Domain.Spectator;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.List;
 
 import Service.Service;
@@ -21,19 +31,15 @@ public class RezervareController {
     private HelloController parentController; // referința la controllerul principal
 
     @FXML
-    private TextField textFieldNume;
-    @FXML
-    private TextField textFieldPrenume;
-    @FXML
     private TextField textFieldEmail;
     @FXML
     private TextField textFieldParola;
+
     @FXML
-    private TextField textFieldTelefon;
-//    @FXML
-//    private Button confirmaButton;
-//    @FXML
-//    private Button anulareButton;
+    private Button creareCont;
+
+    @FXML
+    private Button confirmare;
 
     // se setează de HelloController
     public void setService(Service service) {
@@ -61,8 +67,27 @@ public class RezervareController {
     }
 
     @FXML
-    private void onAnulareButtonClick() {
-        return;
+    private void onCreareContButtonClick() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Controllerul pentru fereastra de rezervare
+        LoginController logController = loader.getController();
+        logController.setService(service);
+
+        // Setăm referința la fereastra principală ca să putem reveni
+        logController.setParentController(this);
+
+        // Deschidem noua fereastră
+        Stage stage = new Stage();
+        stage.setTitle("Date personale spectator");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     // Apelată când apăsăm pe butonul Confirmă din rezervare-view.fxml
@@ -70,14 +95,11 @@ public class RezervareController {
     private void handleConfirmare() {
         try {
             // Datele introduse de utilizator
-            String nume = textFieldNume.getText();
-            String prenume = textFieldPrenume.getText();
             String email = textFieldEmail.getText();
             String parola = textFieldParola.getText();
-            String telefon = textFieldTelefon.getText();
 
             // Validare minimală
-            if (nume.isEmpty() || prenume.isEmpty() || email.isEmpty() || telefon.isEmpty()) {
+            if (email.isEmpty() || parola.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Completați toate câmpurile!", ButtonType.OK);
                 alert.showAndWait();
                 return;
@@ -85,17 +107,22 @@ public class RezervareController {
 
             // Efectuăm rezervarea prin service
             int[] locuriArray = locuriSelectate.stream().mapToInt(i -> i).toArray();
-            service.efectuareRezervare(nume, prenume, email, parola, telefon, locuriArray);
 
+            if (service.verificareLogin(email, parola)) {
+                service.efectuareRezervare(email, parola, locuriArray);
+            } else{
+                throw new Exception("Cont inexistent! Trebuie sa va creati cont.");
+            }
 
             // După rezervare, facem butoanele roșii și dezactivate
             for (ToggleButton btn : locuriButoane) {
                 if (btn.isSelected()) {
-                    btn.setStyle("-fx-background-color: red;");
+                    btn.setStyle("-fx-background-color: red; -fx-border-color: grey");
                     btn.setDisable(true);
                 }
             }
             stage.close();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,6 +131,11 @@ public class RezervareController {
         }
     }
 }
+
+
+
+
+
 
 
 

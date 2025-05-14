@@ -112,10 +112,11 @@ public class SQLRezervareRepository extends RepoMemory<Rezervare> {
 
             add_statement.setInt(1, r.getId());
             add_statement.setString(2, r.getNumeSpectacol());
-            add_statement.setDate(3, (java.sql.Date) r.getData());
+            java.util.Date utilDate = r.getData();  // presupunând că r.getData() returnează un obiect java.util.Date
+            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime()); // convertește în java.sql.Date
+            add_statement.setDate(3, sqlDate);
             add_statement.setInt(4, r.getSpectatorID());
             add_statement.setInt(5, r.getLocId());
-
             add_statement.executeUpdate();
         } catch (SQLException e) {
             throw new Exception(e.getMessage());

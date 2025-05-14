@@ -32,29 +32,31 @@ public class Service {
     }
 
     private int getSpectatorId() {
-        return repoSpec.getSize() + 1;
+        return repoSpec.getSize() + 2;
     }
 
     public List<Loc> getSala() throws Exception {
         return repoLoc.findAll();
     }
 
-    public boolean efectuareRezervare(String nume, String prenume, String email, String parola, String numarTelefon, int[] lista) throws Exception {
+    public void addSpectatorUi(String nume, String prenume, String email, String parola, String numarTelefon) throws Exception {
+        int id_s;
+        id_s = getSpectatorId();
+        addSpectator(id_s, nume, prenume, email, parola, numarTelefon);
+    }
+
+    public void efectuareRezervare(String email, String parola, int[] lista) throws Exception {
         Optional<Spectator> existing = repoSpec.findAll().stream()
                 .filter(s -> s.getEmail().equalsIgnoreCase(email))
                 .findFirst();
 
         int id_s;
-        if (existing.isPresent()) {
-            id_s = existing.get().getId();
-        } else {
-            id_s = getSpectatorId();
-            addSpectator(id_s, nume, prenume, email, parola, numarTelefon);
-        }
+        id_s = existing.get().getId();
+
         for (int i : lista) {
             efectuareRezervarePeLoc(id_s, i);
         }
-        return true;
+
     }
 
     public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
@@ -69,8 +71,6 @@ public class Service {
         Rezervare r = new Rezervare(makeRezervareId(), "Spectacol azi", data, id_s, id_l);
         repoRez.add(r);
         repoLoc.getEntityById(id_l).setStare(true);
-        //ocup locul
-        //return true;
     }
 
     private void resetareStareLocuriLaOra6() {
@@ -82,13 +82,51 @@ public class Service {
     private void efectuareResetareZilnica() {
     }
 
+    private boolean findSpectatorByEmail(String email) {
+        List<Spectator> spectators = null;
+        try {
+            spectators = repoSpec.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        for (Spectator s : spectators) {
+            if (s.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Spectator getSpectatorByEmail(String email) {
+        List<Spectator> spectators = null;
+        try {
+            spectators = repoSpec.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        for (Spectator s : spectators) {
+            if (s.getEmail().equalsIgnoreCase(email)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public boolean verificareLogin(String email, String parola) {
+        Spectator s = getSpectatorByEmail(email);
+        if (!Objects.equals(parola, s.getParola())) {
+            return false;
+        }
+        return true;
+    }
+
 
 //------CRUD-----------------
 
 
     public void addSpectator(int id_s, String nume, String prenume, String email, String parola, String numarTelefon) throws Exception {
         Spectator s = new Spectator(id_s, nume, prenume, email, parola, numarTelefon);
-        //todo:validare
+        //todo:validare daca e necesara
         repoSpec.add(s);
     }
 
@@ -103,7 +141,7 @@ public class Service {
     }
 
     public void updateSpectator(int id_s, String nume, String prenume, String email, String parola, String numarTelefon) throws Exception {
-        repoSpec.update(repoSpec.getEntityById(id_s), new Spectator(id_s, nume, prenume, email, parola ,numarTelefon));
+        repoSpec.update(repoSpec.getEntityById(id_s), new Spectator(id_s, nume, prenume, email, parola, numarTelefon));
     }
 
 }
