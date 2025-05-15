@@ -68,7 +68,7 @@ public class LoginController {
                 return;
             }
             service.addSpectatorUi(nume, prenume, email, parola, telefon);
-            //stage.close();
+            stage.close();
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "A apărut o eroare la adaugarea datelor personale!", ButtonType.OK);
@@ -79,5 +79,7 @@ public class LoginController {
     }
 
     @FXML
-    private void onAnulareButtonClick() {}
+    private void onAnulareButtonClick() {
+        stage.close();
+    }
 }

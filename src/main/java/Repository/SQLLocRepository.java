@@ -2,6 +2,7 @@ package Repository;
 
 import Domain.Loc;
 
+import Domain.Spectator;
 import org.sqlite.SQLiteDataSource;
 
 import java.sql.*;
@@ -22,6 +23,7 @@ public class SQLLocRepository extends RepoMemory<Loc> {
     }
 
     private void loadData() {
+        entities.clear();
         entities.addAll(this.findAll());
     }
 
@@ -86,6 +88,31 @@ public class SQLLocRepository extends RepoMemory<Loc> {
         }
     }
 
+    @Override
+    public void update(Loc old, Loc newLoc) throws Exception {
+        int index = entities.indexOf(old);
+        if (index == -1) {
+            throw new Exception("Locul cu ID-ul " + old.getId() + " nu există.");
+        }
+
+        String sql = "UPDATE locuri SET stare = ? WHERE id_l = ?;";
+        try (PreparedStatement updateStatement = connection.prepareStatement(sql)) {
+            updateStatement.setBoolean(1, newLoc.getStare());
+            updateStatement.setInt(2, newLoc.getId());
+
+
+            int rowsAffected = updateStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new Exception("Eroare la actualizare: nu a fost găsit niciun loc cu ID-ul " + old.getId());
+            }
+        } catch (SQLException e) {
+            throw new Exception("Eroare SQL la actualizare: " + e.getMessage());
+        }
+
+        entities.set(index, newLoc);
+    }
+
 
     @Override
     public List<Loc> findAll() {
@@ -102,6 +129,13 @@ public class SQLLocRepository extends RepoMemory<Loc> {
             return resultList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void resetStareLocuri() throws Exception {
+        String sqlResetLocuri = "UPDATE locuri SET stare = false";
+        try (PreparedStatement stmt = connection.prepareStatement(sqlResetLocuri)) {
+            stmt.executeUpdate();
         }
     }
 }

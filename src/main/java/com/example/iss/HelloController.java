@@ -534,7 +534,7 @@ public class HelloController {
     public void setService(Service service){
         this.service = service;
         try {
-            initialize();
+            //initialize();
             initLocuri();
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
@@ -587,9 +587,10 @@ public class HelloController {
         try {
             // Selectăm locurile bifate (ToggleButton selectate)
             List<Integer> locuriSelectate = locuriButoane.stream()
-                    .filter(ToggleButton::isSelected)
+                    .filter(b -> b.isSelected() && !b.isDisable())
                     .map(b -> (Integer) b.getUserData())
                     .collect(Collectors.toList());
+
 
             if (locuriSelectate.isEmpty()) {
                 // Nu ai selectat nimic -> mesaj de avertizare
@@ -617,6 +618,7 @@ public class HelloController {
             Stage stage = new Stage();
             stage.setTitle("Date personale spectator");
             stage.setScene(new Scene(root));
+            rezController.setStage(stage);
             stage.show();
 
         } catch (Exception e) {

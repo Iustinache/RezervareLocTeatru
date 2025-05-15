@@ -5,7 +5,9 @@ import Domain.Rezervare;
 import Domain.Loc;
 
 import Repository.IRepository;
+import Repository.SQLLocRepository;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -32,7 +34,7 @@ public class Service {
     }
 
     private int getSpectatorId() {
-        return repoSpec.getSize() + 2;
+        return repoSpec.getSize() + 1;
     }
 
     public List<Loc> getSala() throws Exception {
@@ -59,18 +61,37 @@ public class Service {
 
     }
 
+//    public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
+//        LocalDate azi = LocalDate.now();
+//        Date data = Date.from(azi.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//
+//        Loc loc = repoLoc.getEntityById(id_l);
+//        if (loc.getStare()) {
+//            throw new Exception();
+//        }
+//
+//        Rezervare r = new Rezervare(makeRezervareId(), "Spectacol azi", data, id_s, id_l);
+//        repoRez.add(r);
+//        repoLoc.getEntityById(id_l).setStare(true);
+//    }
+
     public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
         LocalDate azi = LocalDate.now();
         Date data = Date.from(azi.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         Loc loc = repoLoc.getEntityById(id_l);
         if (loc.getStare()) {
-            throw new Exception();
+            throw new Exception("Locul este deja rezervat.");
         }
 
         Rezervare r = new Rezervare(makeRezervareId(), "Spectacol azi", data, id_s, id_l);
         repoRez.add(r);
-        repoLoc.getEntityById(id_l).setStare(true);
+
+        // Creez un nou obiect Loc cu stare true
+        Loc updatedLoc = new Loc(loc.getId(), loc.getRand(), loc.getLoja(), loc.getNumar(), loc.getPret(), true);
+
+        // Fac update-ul in baza de date si in lista entities
+        repoLoc.update(loc, updatedLoc);
     }
 
     private void resetareStareLocuriLaOra6() {
@@ -112,13 +133,40 @@ public class Service {
         return null;
     }
 
-    public boolean verificareLogin(String email, String parola) {
-        Spectator s = getSpectatorByEmail(email);
-        if (!Objects.equals(parola, s.getParola())) {
-            return false;
+    public boolean verificareLogin(String email, String parola) throws Exception {
+        Optional<Spectator> s = repoSpec.findAll().stream()
+                .filter(spec -> spec.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+
+        if (s.isEmpty()) {
+            throw new Exception("Cont inexistent! Trebuie sa va creati cont. Sau verificati daca ati scris corect emailul si parola");
         }
-        return true;
+
+        return s.get().getParola().equals(parola);
     }
+
+    public double calculeazaCost(int[] locuriArray) throws Exception {
+        double total = 0;
+        for (int idLoc : locuriArray) {
+            Loc loc = repoLoc.getEntityById(idLoc);
+            total += loc.getPret();
+        }
+        return total;
+    }
+
+//    public void resetLocuri() throws Exception {
+//        ((SQLLocRepository) repoLoc).resetStareLocuri();
+//    }
+//
+//    private LocalDate ultimaZiResetare = null;
+//
+//    public void resetLocuriOdataPeZi() throws Exception {
+//        LocalDate azi = LocalDate.now();
+//        if (ultimaZiResetare == null || !ultimaZiResetare.equals(azi)) {
+//            resetLocuri(); // faci efectiv resetarea
+//            ultimaZiResetare = azi;
+//        }
+//    }
 
 
 //------CRUD-----------------

@@ -26,44 +26,45 @@ public class SQLRezervareRepository extends RepoMemory<Rezervare> {
     }
 
     private void loadData() {
+        entities.clear();
         entities.addAll(this.findAll());
     }
 
 
-    private void initRezervariTable() {
-        List<Rezervare> rezervariList = new ArrayList<>();
-        Spectator s1 = new Spectator(1,"Nume1","Prenume1","test1@gmail.com","parola1" ,"+4070000000000");
-        Spectator s2 = new Spectator(2,"Nume2","Prenume2","test2@gmail.com","parola2","+4070000000001");
-        Spectator s3 = new Spectator(3,"Nume3","Prenume3","test3@gmail.com","parola3","+4070000000002");
-        Spectator s4 = new Spectator(4,"Nume4","Prenume4","test4@gmail.com","parola4","+4070000000003");
-        Spectator s5 = new Spectator(5,"Nume5","Prenume5","test5@gmail.com","parola5","+4070000000004");
-
-        Loc loc1 = new Loc(1, 1, "A", 1, 50.0, false); // liber
-        Loc loc2 = new Loc(2, 1, "A", 2, 50.0, true);  // ocupat
-        Loc loc3 = new Loc(3, 2, "B", 1, 60.0, false); // liber
-        Loc loc4 = new Loc(4, 2, "B", 2, 60.0, true);  // ocupat
-        Loc loc5 = new Loc(5, 3, "C", 1, 70.0, false); // liber
-
-
-        rezervariList.add(new Rezervare(100,"Nume1",new Date(2025,04,22),1, 1));
-        rezervariList.add(new Rezervare(101,"Nume2",new Date(2025,04,22),2,2));
-        rezervariList.add(new Rezervare(102,"Nume3",new Date(2025,04,22),3,3));
-        rezervariList.add(new Rezervare(103,"Nume4",new Date(2025,04,22),4,4));
-        rezervariList.add(new Rezervare(104,"Nume5",new Date(2025,04,22),5,5));
-
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO rezervari VALUES (?,?,?,?,?);")) {
-            for (Rezervare r : rezervariList) {
-                statement.setInt(1, r.getId());
-                statement.setString(2, r.getNumeSpectacol());
-                statement.setDate(3, new java.sql.Date(r.getData().getTime()));
-                statement.setInt(4, r.getSpectatorID());
-                statement.setInt(5, r.getLocId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void initRezervariTable() {
+//        List<Rezervare> rezervariList = new ArrayList<>();
+//        Spectator s1 = new Spectator(1,"Nume1","Prenume1","test1@gmail.com","parola1" ,"+4070000000000");
+//        Spectator s2 = new Spectator(2,"Nume2","Prenume2","test2@gmail.com","parola2","+4070000000001");
+//        Spectator s3 = new Spectator(3,"Nume3","Prenume3","test3@gmail.com","parola3","+4070000000002");
+//        Spectator s4 = new Spectator(4,"Nume4","Prenume4","test4@gmail.com","parola4","+4070000000003");
+//        Spectator s5 = new Spectator(5,"Nume5","Prenume5","test5@gmail.com","parola5","+4070000000004");
+//
+//        Loc loc1 = new Loc(1, 1, "A", 1, 50.0, false); // liber
+//        Loc loc2 = new Loc(2, 1, "A", 2, 50.0, true);  // ocupat
+//        Loc loc3 = new Loc(3, 2, "B", 1, 60.0, false); // liber
+//        Loc loc4 = new Loc(4, 2, "B", 2, 60.0, true);  // ocupat
+//        Loc loc5 = new Loc(5, 3, "C", 1, 70.0, false); // liber
+//
+//
+//        rezervariList.add(new Rezervare(100,"Nume1",new Date(2025,04,22),1, 1));
+//        rezervariList.add(new Rezervare(101,"Nume2",new Date(2025,04,22),2,2));
+//        rezervariList.add(new Rezervare(102,"Nume3",new Date(2025,04,22),3,3));
+//        rezervariList.add(new Rezervare(103,"Nume4",new Date(2025,04,22),4,4));
+//        rezervariList.add(new Rezervare(104,"Nume5",new Date(2025,04,22),5,5));
+//
+//        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO rezervari VALUES (?,?,?,?,?);")) {
+//            for (Rezervare r : rezervariList) {
+//                statement.setInt(1, r.getId());
+//                statement.setString(2, r.getNumeSpectacol());
+//                statement.setDate(3, new java.sql.Date(r.getData().getTime()));
+//                statement.setInt(4, r.getSpectatorID());
+//                statement.setInt(5, r.getLocId());
+//                statement.executeUpdate();
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private void openConnection() {
         SQLiteDataSource dataSource = new SQLiteDataSource();
@@ -78,7 +79,7 @@ public class SQLRezervareRepository extends RepoMemory<Rezervare> {
     }
 
     private void createTable() {
-        String s = "Create Table if not exists rezervari( id_r int, numeSpectacol varchar(30), data date, id_s int , id_l int,  PRIMARY KEY (id_s), FOREIGN KEY (id_s) REFERENCES spectatori(id_s), FOREIGN KEY (id_l) REFERENCES locuri(id_l))";
+        String s = "Create Table if not exists rezervari( id_r int, numeSpectacol varchar(30), data date, id_s int , id_l int,  PRIMARY KEY (id_r), FOREIGN KEY (id_s) REFERENCES spectatori(id_s), FOREIGN KEY (id_l) REFERENCES locuri(id_l))";
         try {
 
             Statement statement = connection.createStatement();

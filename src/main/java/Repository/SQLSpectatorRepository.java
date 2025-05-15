@@ -22,6 +22,7 @@ public class SQLSpectatorRepository extends RepoMemory<Spectator> {
     }
 
     private void loadData() {
+        entities.clear();
         entities.addAll(this.findAll());
     }
 
