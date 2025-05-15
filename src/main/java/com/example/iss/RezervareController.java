@@ -89,46 +89,6 @@ public class RezervareController {
         stage.show();
     }
 
-    // Apelată când apăsăm pe butonul Confirmă din rezervare-view.fxml
-//    @FXML
-//    private void handleConfirmare() {
-//        try {
-//            // Datele introduse de utilizator
-//            String email = textFieldEmail.getText();
-//            String parola = textFieldParola.getText();
-//
-//            // Validare minimală
-//            if (email.isEmpty() || parola.isEmpty()) {
-//                Alert alert = new Alert(Alert.AlertType.WARNING, "Completați toate câmpurile!", ButtonType.OK);
-//                alert.showAndWait();
-//                return;
-//            }
-//
-//            // Efectuăm rezervarea prin service
-//            int[] locuriArray = locuriSelectate.stream().mapToInt(i -> i).toArray();
-//
-//            if (service.verificareLogin(email, parola)) {
-//                service.efectuareRezervare(email, parola, locuriArray);
-//            } else{
-//                throw new Exception("Cont inexistent! Trebuie sa va creati cont.");
-//            }
-//
-//            // După rezervare, facem butoanele roșii și dezactivate
-//            for (ToggleButton btn : locuriButoane) {
-//                if (btn.isSelected()) {
-//                    btn.setStyle("-fx-background-color: red; -fx-border-color: grey");
-//                    btn.setDisable(true);
-//                }
-//            }
-//            stage.close();
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Alert alert = new Alert(Alert.AlertType.ERROR, "A apărut o eroare la rezervare!", ButtonType.OK);
-//            alert.showAndWait();
-//        }
-//    }
     @FXML
     private void handleConfirmare() {
         try {

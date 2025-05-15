@@ -7,6 +7,9 @@ import Domain.Loc;
 import Repository.IRepository;
 import Repository.SQLLocRepository;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -61,19 +64,6 @@ public class Service {
 
     }
 
-//    public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
-//        LocalDate azi = LocalDate.now();
-//        Date data = Date.from(azi.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//
-//        Loc loc = repoLoc.getEntityById(id_l);
-//        if (loc.getStare()) {
-//            throw new Exception();
-//        }
-//
-//        Rezervare r = new Rezervare(makeRezervareId(), "Spectacol azi", data, id_s, id_l);
-//        repoRez.add(r);
-//        repoLoc.getEntityById(id_l).setStare(true);
-//    }
 
     public void efectuareRezervarePeLoc(int id_s, int id_l) throws Exception {
         LocalDate azi = LocalDate.now();
@@ -94,44 +84,39 @@ public class Service {
         repoLoc.update(loc, updatedLoc);
     }
 
-    private void resetareStareLocuriLaOra6() {
+
+    public List<Integer> anuleazaToateRezervarile(String email, String parola) throws Exception {
+        if (!verificareLogin(email, parola)) {
+            throw new Exception("Date de autentificare incorecte!");
+        }
+
+        Spectator spectator = repoSpec.findAll().stream()
+                .filter(s -> s.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Spectatorul nu exista!"));
+
+        int spectatorId = spectator.getId();
+
+        List<Rezervare> rezervariSpectator = repoRez.findAll().stream()
+                .filter(r -> r.getSpectatorID() == spectatorId)
+                .toList();
+
+        List<Integer> locuriAnulate = new ArrayList<>();
+
+        for (Rezervare rezervare : rezervariSpectator) {
+            int locId = rezervare.getLocId();
+            locuriAnulate.add(locId);
+
+            repoRez.removeById(rezervare.getId());
+
+            Loc loc = repoLoc.getEntityById(locId);
+            Loc updatedLoc = new Loc(loc.getId(), loc.getRand(), loc.getLoja(), loc.getNumar(), loc.getPret(), false);
+            repoLoc.update(loc, updatedLoc);
+        }
+
+        return locuriAnulate;
     }
 
-    private void setareSpectacol() {
-    }
-
-    private void efectuareResetareZilnica() {
-    }
-
-    private boolean findSpectatorByEmail(String email) {
-        List<Spectator> spectators = null;
-        try {
-            spectators = repoSpec.findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        for (Spectator s : spectators) {
-            if (s.getEmail().equalsIgnoreCase(email)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Spectator getSpectatorByEmail(String email) {
-        List<Spectator> spectators = null;
-        try {
-            spectators = repoSpec.findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        for (Spectator s : spectators) {
-            if (s.getEmail().equalsIgnoreCase(email)) {
-                return s;
-            }
-        }
-        return null;
-    }
 
     public boolean verificareLogin(String email, String parola) throws Exception {
         Optional<Spectator> s = repoSpec.findAll().stream()
@@ -154,19 +139,50 @@ public class Service {
         return total;
     }
 
-//    public void resetLocuri() throws Exception {
-//        ((SQLLocRepository) repoLoc).resetStareLocuri();
-//    }
-//
-//    private LocalDate ultimaZiResetare = null;
-//
-//    public void resetLocuriOdataPeZi() throws Exception {
-//        LocalDate azi = LocalDate.now();
-//        if (ultimaZiResetare == null || !ultimaZiResetare.equals(azi)) {
-//            resetLocuri(); // faci efectiv resetarea
-//            ultimaZiResetare = azi;
-//        }
-//    }
+
+    //---------partea de reset  a orei ---------------
+
+    private final String FILE_RESET = "reset_date.txt";
+
+    private LocalDate readLastResetDate() {
+        try {
+            File file = new File(FILE_RESET);
+            if (!file.exists()) {
+                return null;
+            }
+            Scanner scanner = new Scanner(file);
+            if (scanner.hasNextLine()) {
+                String dateStr = scanner.nextLine();
+                return LocalDate.parse(dateStr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void writeLastResetDate(LocalDate date) {
+        try (FileWriter writer = new FileWriter(FILE_RESET)) {
+            writer.write(date.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetLocuriOdataPeZi() throws Exception {
+        LocalDate azi = LocalDate.now();
+        LocalDate ultimaReset = readLastResetDate();
+
+        if (ultimaReset == null || !ultimaReset.equals(azi)) {
+            resetLocuri(); // faci resetarea stării locurilor
+            writeLastResetDate(azi); // actualizezi fișierul cu data de azi
+        }
+    }
+
+
+    public void resetLocuri() throws Exception {
+        ((SQLLocRepository) repoLoc).resetStareLocuri();
+    }
 
 
 //------CRUD-----------------

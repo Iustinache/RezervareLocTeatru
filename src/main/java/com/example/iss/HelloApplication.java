@@ -28,14 +28,14 @@ public class HelloApplication extends Application {
         // creezi service-ul
         Service service = new Service(repoSpec, repoLoc, repoRez);
 
-//        LocalTime oraCurenta = LocalTime.now();
-//        if (oraCurenta.isAfter(LocalTime.of(6, 0))) {
-//            try {
-//                service.resetLocuriOdataPeZi();
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        LocalTime oraCurenta = LocalTime.now();
+        if (oraCurenta.isAfter(LocalTime.of(6, 0))) {
+            try {
+                service.resetLocuriOdataPeZi();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         HelloController controller = fxmlLoader.getController();
         controller.setService(service);

@@ -519,6 +519,9 @@ public class HelloController {
     @FXML
     private Button butonRezervare;
 
+    @FXML
+    private Button butonAnulareRezervare;
+
 
     private Service service;
     private List<ToggleButton> locuriButoane = new ArrayList<>();
@@ -546,7 +549,6 @@ public class HelloController {
 
     }
 
-
     private void initLocuri() throws Exception {
         List<Loc> locuri = service.getSala();
 
@@ -570,8 +572,44 @@ public class HelloController {
         }
     }
 
+    public List<ToggleButton> getLocuriButoane() {
+        return locuriButoane;
+    }
 
-    //"Locul cu numărul " + loc.getNumar() + " de la loja " + loc.getLoja() + " este deja ocupat."
+    @FXML
+    protected void onButonAnulareRezervareClick() {
+        try {
+            handleAnulareRezervareAction();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void handleAnulareRezervareAction() throws IOException{
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("loginAnulare-view.fxml"));
+            Parent root = loader.load();
+
+            // Controllerul pentru fereastra de rezervare
+            AnulareController anuController = loader.getController();
+            anuController.setService(service);
+
+
+            anuController.setParentController(this);
+
+            // Deschidem noua fereastră
+            Stage stage = new Stage();
+            stage.setTitle("Date personale spectator");
+            stage.setScene(new Scene(root));
+            anuController.setStage(stage);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     protected void onButonRezervareClick() {
