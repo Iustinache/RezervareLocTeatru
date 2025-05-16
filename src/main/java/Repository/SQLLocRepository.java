@@ -136,6 +136,8 @@ public class SQLLocRepository extends RepoMemory<Loc> {
         String sqlResetLocuri = "UPDATE locuri SET stare = false";
         try (PreparedStatement stmt = connection.prepareStatement(sqlResetLocuri)) {
             stmt.executeUpdate();
+            loadData();
         }
+
     }
 }
